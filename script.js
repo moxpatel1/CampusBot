@@ -91,6 +91,7 @@ const chatbotData = {
         message: "You selected Admissions. What would you like to know?",
         options: [
             { id: "admission_eligibility", label: "Eligibility Criteria" },
+            { id: "admission_eligibility_check", label: "Check My Eligibility" },
             { id: "admission_process", label: "Application Process" },
             { id: "admission_documents", label: "Required Documents" },
             { id: "admission_dates", label: "Important Dates" },
@@ -99,6 +100,13 @@ const chatbotData = {
     },
     admission_eligibility: {
         message: "<strong>Eligibility Criteria:</strong><br><br><strong>Undergraduate (B.Tech/BBA/BCA):</strong><br>• 10+2 with 60% aggregate<br>• Physics, Math mandatory for B.Tech<br>• Valid entrance exam score<br><br><strong>Postgraduate (M.Tech/MBA/MCA):</strong><br>• Bachelor's degree with 55%<br>• Valid GATE/CAT/MAT score<br><br><em>Relaxation for reserved categories as per norms.</em>",
+        options: [
+            { id: "admission", label: "Back to Admissions" },
+            { id: "back_main", label: "Main Menu" }
+        ]
+    },
+    admission_eligibility_check: {
+        message: "Great! Use the Admission Eligibility Checker section below to enter your course, score and get an instant result.",
         options: [
             { id: "admission", label: "Back to Admissions" },
             { id: "back_main", label: "Main Menu" }
@@ -252,6 +260,100 @@ const chatbotData = {
     }
 };
 
+// additional feature data
+const eventsData = [
+    {
+        id: 'coding-bootcamp',
+        title: '7-Day Coding Bootcamp',
+        description: 'Intensive full-stack coding workshop: HTML/CSS/JS + Backend and deployment.',
+        date: '2026-04-05',
+        location: 'Innovation Lab'
+    },
+    {
+        id: 'softskills',
+        title: 'Soft Skills & Interview Prep',
+        description: 'Mock interviews, resume tips, and personality development session.',
+        date: '2026-04-15',
+        location: 'Symposium Hall'
+    },
+    {
+        id: 'alumni-meet',
+        title: 'Alumni Meet & Placement Drive',
+        description: 'Meet alumni recruiters, company stalls, and live recruitment interviews.',
+        date: '2026-04-25',
+        location: 'Auditorium'
+    }
+];
+
+function renderEvents() {
+    const eventsGrid = document.getElementById('events-grid');
+    if (!eventsGrid) return;
+
+    eventsGrid.innerHTML = '';
+
+    eventsData.forEach(event => {
+        const card = document.createElement('div');
+        card.className = 'event-card';
+        card.innerHTML = `
+            <h3>${event.title}</h3>
+            <p class="event-meta">${event.date} · ${event.location}</p>
+            <p>${event.description}</p>
+            <button data-event="${event.id}">Register</button>
+        `;
+
+        const btn = card.querySelector('button');
+        btn.addEventListener('click', () => {
+            alert(`Event registration page removed. Please contact college admin to register for ${event.title}.`);
+        });
+
+        eventsGrid.appendChild(card);
+    });
+}
+
+function setupEligibilityChecker() {
+    const form = document.getElementById('eligibility-form');
+    const result = document.getElementById('eligibility-result');
+
+    const rules = {
+        'B.Tech': { minPercentage: 60, minExam: 60, text: '10+2 with Physics & Math, and minimum entrance score 60' },
+        'BCA': { minPercentage: 55, minExam: 50, text: '10+2 aggregate 55% and entrance score 50' },
+        'MBA': { minPercentage: 60, minExam: 65, text: 'Graduation aggregate 60% and CAT/MAT 65' },
+        'M.Tech': { minPercentage: 60, minExam: 65, text: 'Graduation aggregate 60% and GATE 65' },
+    };
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const course = document.getElementById('course').value;
+        const percentage = parseFloat(document.getElementById('percentage').value);
+        const examScore = parseFloat(document.getElementById('examScore').value);
+
+        if (!course || Number.isNaN(percentage) || Number.isNaN(examScore)) {
+            result.textContent = 'Please fill all fields correctly.';
+            result.style.color = '#f97316';
+            return;
+        }
+
+        const rule = rules[course];
+        if (!rule) {
+            result.textContent = 'Selected course not supported yet.';
+            result.style.color = '#f97316';
+            return;
+        }
+
+        if (percentage >= rule.minPercentage && examScore >= rule.minExam) {
+            result.innerHTML = `✅ You are eligible for <strong>${course}</strong>.<br>Requirement: ${rule.text}.`;
+            result.style.color = '#22c55e';
+        } else {
+            const missing = [];
+            if (percentage < rule.minPercentage) missing.push(`minimum ${rule.minPercentage}%`);
+            if (examScore < rule.minExam) missing.push(`minimum entrance score ${rule.minExam}`);
+            result.innerHTML = `❌ You are not eligible for <strong>${course}</strong> yet.<br>Requirement: ${rule.text}.<br>Requirements not met: ${missing.join(', ')}.`;
+            result.style.color = '#f87171';
+        }
+    });
+}
+
 // DOM Elements
 const chatbotToggle = document.getElementById('chatbot-toggle');
 const chatbotWindow = document.getElementById('chatbot-window');
@@ -327,4 +429,16 @@ function handleOptionClick(option) {
         typingDiv.remove();
         showMessage(option.id);
     }, 1500);
+}
+
+// initialize custom sections
+function initCampusFeatures() {
+    renderEvents();
+    setupEligibilityChecker();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCampusFeatures);
+} else {
+    initCampusFeatures();
 }
