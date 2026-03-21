@@ -303,7 +303,7 @@ function renderEvents() {
 
         const btn = card.querySelector('button');
         btn.addEventListener('click', () => {
-            alert(`Event registration page removed. Please contact college admin to register for ${event.title}.`);
+            window.location.href = `register.html?event=${event.id}`;
         });
 
         eventsGrid.appendChild(card);
@@ -354,6 +354,103 @@ function setupEligibilityChecker() {
     });
 }
 
+function setupRegistrationForm() {
+    const form = document.getElementById('register-form');
+    if (!form) return;
+
+    const selectEvent = document.getElementById('event-select');
+    const result = document.getElementById('register-result');
+
+    // Populate events
+    eventsData.forEach(ev => {
+        const option = document.createElement('option');
+        option.value = ev.id;
+        option.textContent = `${ev.title} (${ev.date})`;
+        selectEvent.appendChild(option);
+    });
+
+    // Auto-select event from URL if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventIdParam = urlParams.get('event');
+    if (eventIdParam) {
+        selectEvent.value = eventIdParam;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const eventId = selectEvent.value;
+        const name = document.getElementById('fullname').value;
+        const branch = document.getElementById('branch').value;
+        const contact = document.getElementById('contact').value;
+
+        if (!eventId || !name || !branch || !contact) {
+            result.style.display = 'block';
+            result.style.color = '#f87171'; // Red
+            result.innerHTML = 'Please fill out all fields.';
+            return;
+        }
+
+        const selectedEvent = eventsData.find(ev => ev.id === eventId);
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        try {
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+            
+            // Call Node.js backend API
+            const response = await fetch('http://localhost:5000/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    eventId: eventId,
+                    fullname: name,
+                    branch: branch,
+                    contact: contact
+                })
+            });
+
+            const data = await response.json();
+
+            // Re-enable button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Register Now';
+
+            if (response.ok) {
+                // Show success message
+                result.style.display = 'block';
+                result.style.color = '#22c55e'; // Green
+                result.innerHTML = `✅ <strong>${name}</strong>, you have successfully registered for <strong>${selectedEvent ? selectedEvent.title : 'the event'}</strong>!<br><span style="font-size: 0.9rem; color: #94a3b8;">A confirmation text will be sent to ${contact}.</span>`;
+                
+                // Reset form
+                form.reset();
+            } else {
+                throw new Error(data.error || 'Failed to register');
+            }
+        } catch (error) {
+            // Re-enable button on error
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Register Now';
+
+            // Show error message (likely backend is not running)
+            result.style.display = 'block';
+            result.style.color = '#f97316'; // Orange warning
+            result.innerHTML = `⚠️ <strong>Connection Error</strong><br><span style="font-size: 0.9rem;">Could not connect to the backend server. Please make sure the Node.js server is running on port 5000.</span>`;
+            console.error('Registration failed:', error);
+        }
+        
+        // Hide message after 5 seconds if successful
+        setTimeout(() => {
+            if(result.style.color === 'rgb(34, 197, 94)') { // Only hide if green (success)
+                result.style.display = 'none';
+            }
+        }, 5000);
+    });
+}
+
 // DOM Elements
 const chatbotToggle = document.getElementById('chatbot-toggle');
 const chatbotWindow = document.getElementById('chatbot-window');
@@ -361,6 +458,11 @@ const chatbotClose = document.getElementById('chatbot-close');
 const chatbotMessages = document.getElementById('chatbot-messages');
 const chatbotOptions = document.getElementById('chatbot-options');
 const chatbotBadge = document.querySelector('.chatbot-badge');
+
+// AI Integration config
+const GEMINI_API_KEY = "AIzaSyACEJKpKAcQZhOq2VYa3N6EXii3dd668ow"; // Replace with your Gemini API Key from Google AI Studio
+const chatbotInput = document.getElementById('chatbot-input');
+const chatbotSend = document.getElementById('chatbot-send');
 
 // Toggle chatbot window
 chatbotToggle.addEventListener('click', () => {
@@ -431,10 +533,101 @@ function handleOptionClick(option) {
     }, 1500);
 }
 
+// Handle smart free-text chat
+async function handleUserMessage() {
+    const text = chatbotInput.value.trim();
+    if (!text) return;
+
+    // Clear input
+    chatbotInput.value = '';
+
+    // Add user message to UI
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chatbot-msg user';
+    userMsg.textContent = text;
+    chatbotMessages.appendChild(userMsg);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+    // Show typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chatbot-msg bot typing-indicator';
+    typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    chatbotMessages.appendChild(typingDiv);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+    // Get response from Gemini API
+    const botResponseText = await askGemini(text);
+
+    // Remove typing indicator and show AI response
+    typingDiv.remove();
+    const botMsg = document.createElement('div');
+    botMsg.className = 'chatbot-msg bot';
+
+    // Convert basic markdown formatting from Gemini to HTML
+    let formattedText = botResponseText
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
+
+    botMsg.innerHTML = formattedText;
+    chatbotMessages.appendChild(botMsg);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+async function askGemini(question) {
+    if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_API_KEY_HERE") {
+        return "I am currently in offline mode. Please paste your **Gemini API Key** into `script.js` to enable my AI brain!";
+    }
+
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: "You are CampusBot, a helpful, friendly, and concise AI assistant for a college. Answer this student's question in a few sentences: " + question
+                    }]
+                }]
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.error && data.error.message) {
+            console.error("Gemini API Error:", data.error.message);
+            return "Sorry, there was an issue with the API key or quota.";
+        }
+
+        if (data.candidates && data.candidates.length > 0) {
+            return data.candidates[0].content.parts[0].text;
+        } else {
+            return "I'm not quite sure how to answer that right now.";
+        }
+    } catch (error) {
+        console.error("Fetch Error:", error);
+        return "I'm having trouble connecting to the internet. Please try again later.";
+    }
+}
+
+// Event listeners for chat input
+if (chatbotSend) {
+    chatbotSend.addEventListener('click', handleUserMessage);
+}
+
+if (chatbotInput) {
+    chatbotInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleUserMessage();
+        }
+    });
+}
+
 // initialize custom sections
 function initCampusFeatures() {
     renderEvents();
     setupEligibilityChecker();
+    setupRegistrationForm();
 }
 
 if (document.readyState === 'loading') {

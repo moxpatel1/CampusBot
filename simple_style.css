@@ -60,6 +60,7 @@ a {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex: 1;
 }
 
 .nav-logo {
@@ -80,16 +81,38 @@ a {
 .nav-links {
     list-style: none;
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 35px;
+    flex: 2;
 }
 
 .nav-links a {
-    color: #94a3b8;
+    color: #e2e8f0;
     font-weight: 500;
     font-size: 0.95rem;
     position: relative;
     padding: 5px 0;
     transition: color 0.3s;
+}
+
+.nav-auth {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    flex: 1;
+}
+
+.nav-auth a:not(.btn) {
+    color: #e2e8f0;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.nav-auth a:not(.btn):hover {
+    color: #0ea5e9;
 }
 
 .nav-links a::after {
@@ -669,6 +692,179 @@ a {
     animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
+/* Eligibility Checker */
+.eligibility-section,
+.events-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.eligibility-form {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 1px solid #475569;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.28);
+}
+
+.eligibility-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field-group label {
+    color: #cbd5e1;
+    font-weight: 600;
+}
+
+.field-group input,
+.field-group select {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #64748b;
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+.eligibility-result {
+    margin-top: 16px;
+    font-size: 1.05rem;
+    min-height: 48px;
+    color: #cbd5e1;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid #334155;
+    background: rgba(30, 41, 59, 0.65);
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.event-registration-wrapper {
+    margin-top: 40px;
+    background: linear-gradient(135deg, #1e293b 0%, #2e3a53 100%);
+    border: 1px solid #475569;
+    border-radius: 16px;
+    padding: 28px;
+}
+
+.event-registration-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.event-registration-form .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.event-registration-form label {
+    color: #cbd5e1;
+    font-weight: 600;
+}
+
+.event-registration-form input,
+.event-registration-form select {
+    padding: 10px 12px;
+    background: #0f172a;
+    border: 1px solid #64748b;
+    border-radius: 10px;
+    color: #e2e8f0;
+}
+
+.event-registration-result {
+    min-height: 40px;
+    margin-bottom: 14px;
+    color: #cbd5e1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background: rgba(30, 41, 59, 0.6);
+}
+
+.event-signup-list {
+    margin-top: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.event-signup-item {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid #475569;
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+    .event-registration-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+.event-card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 1px solid #475569;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.event-card h3 {
+    color: #f1f5f9;
+    margin-bottom: 10px;
+}
+
+.event-card p {
+    color: #cbd5e1;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.event-card .event-meta {
+    color: #94a3b8;
+    margin-bottom: 14px;
+}
+
+.event-card button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 50%, #7c3aed 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.event-card button.registered {
+    background: #22c55e;
+}
+
+@media (max-width: 768px) {
+    .eligibility-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
 .about-text p {
     margin-bottom: 20px;
     font-size: 1.15rem;
@@ -1052,6 +1248,55 @@ a {
     box-shadow: 0 12px 35px rgba(14, 165, 233, 0.5);
 }
 
+.chatbot-input-container {
+    display: flex;
+    padding: 20px 30px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-top: 1px solid #334155;
+    gap: 15px;
+    align-items: center;
+}
+
+.chatbot-input-container input {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid #475569;
+    padding: 14px 20px;
+    border-radius: 30px;
+    color: #f1f5f9;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.chatbot-input-container input:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+    background: rgba(15, 23, 42, 0.8);
+}
+
+.chatbot-input-container button {
+    background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+}
+
+.chatbot-input-container button:hover {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .hero-container {
@@ -1138,6 +1383,15 @@ a {
     .chatbot-option-btn {
         padding: 12px 20px;
         font-size: 0.9rem;
+    }
+
+    .chatbot-input-container {
+        padding: 15px 20px;
+    }
+
+    .chatbot-input-container input {
+        padding: 12px 18px;
+        font-size: 0.95rem;
     }
 
     .footer-content {
