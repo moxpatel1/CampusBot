@@ -74,19 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Only set up the click interceptor if NOT on an auth page
     if (!isAuthPage) {
         document.body.addEventListener('click', (e) => {
-            const target = e.target.closest('button') || e.target.closest('a') || e.target.closest('.chat-preview-btn');
+            const target = e.target.closest('[data-requires-auth="true"]');
 
             if (target) {
                 const href = target.getAttribute('href') || '';
-                
-                // Exemptions for the interceptor
-                const isChatbot = target.closest('#chatbot-window') || target.closest('#chatbot-container');
-                const isAuthLink = href.includes('login.html') || href.includes('signup.html');
-                const isHomeOrLogo = href === '#' || href === 'simple_index.html' || target.closest('.logo-container');
-
-                if (isChatbot || isAuthLink || isHomeOrLogo) {
-                    return;
-                }
 
                 if (!isLoggedIn()) {
                     e.preventDefault();

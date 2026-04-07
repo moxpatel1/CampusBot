@@ -27,7 +27,7 @@
             </ul>
             <div class="nav-auth">
                 <a href="login.html" id="nav-login">Login</a>
-                <a href="signup.html" id="nav-signup" class="btn btn-primary" style="padding: 10px 24px; margin-left: 15px;">Sign Up</a>
+                <a href="signup.html" id="nav-signup" class="btn btn-primary nav-signup-link">Sign Up</a>
             </div>
         </div>
     </nav>
@@ -60,6 +60,31 @@
     <!-- Features Section -->
     <section id="features" class="features-section">
         <div class="container">
+            <div class="stakeholder-strip">
+                <h3 class="stakeholder-strip-title">Stakeholder Portals</h3>
+                <div class="stakeholder-mini-grid">
+                    <a href="stakeholder_student.html" class="stakeholder-mini-box">
+                        <i class="fas fa-user-graduate"></i>
+                        <h4>Students</h4>
+                        <p>Academic support, exam info, and campus updates in one place.</p>
+                    </a>
+                    <a href="stakeholder_parent.html" class="stakeholder-mini-box">
+                        <i class="fas fa-users"></i>
+                        <h4>Parents</h4>
+                        <p>Track progress, fee reminders, and important notices quickly.</p>
+                    </a>
+                    <a href="stakeholder_faculty.html" class="stakeholder-mini-box">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h4>Faculty</h4>
+                        <p>Manage schedules, student communication, and class operations.</p>
+                    </a>
+                    <a href="stakeholder_admin.html" class="stakeholder-mini-box">
+                        <i class="fas fa-building"></i>
+                        <h4>Administration</h4>
+                        <p>Control admissions workflows, reports, and campus announcements.</p>
+                    </a>
+                </div>
+            </div>
             <h2 class="section-heading">Key Features</h2>
             <p class="section-subtitle">Everything you need to navigate your college journey, all in one place</p>
             <div class="feature-grid">
@@ -202,7 +227,7 @@
             <h2 class="section-heading">Upcoming Campus Events</h2>
             <p class="section-subtitle">Stay updated and register for campus workshops and drives.</p>
             <div id="events-grid" class="events-grid"></div>
-            <p class="section-subtitle" style="margin-top: 20px; color: #94a3b8;">Click <strong>Register</strong> on any event card to go to the dedicated registration page.</p>
+            <p class="section-subtitle events-section-note">Click <strong>Register</strong> on any event card to go to the dedicated registration page.</p>
         </div>
     </section>
 
@@ -243,7 +268,7 @@
     <!-- Chatbot Widget -->
     <div id="chatbot-container" class="chatbot-container">
         <!-- Chat Toggle Button -->
-        <button id="chatbot-toggle" class="chatbot-toggle">
+        <button id="chatbot-toggle" class="chatbot-toggle" type="button">
             <i class="fas fa-comment-dots"></i>
             <span class="chatbot-badge">1</span>
         </button>
@@ -258,7 +283,7 @@
                         <div class="chatbot-header-subtitle">Always here to help you</div>
                     </span>
                 </div>
-                <button id="chatbot-close" class="chatbot-close" title="Close chat" aria-label="Close chat">
+                <button id="chatbot-close" class="chatbot-close" title="Close chat" aria-label="Close chat" type="button">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -271,7 +296,7 @@
             
             <div class="chatbot-input-container">
                 <input type="text" id="chatbot-input" placeholder="Type your question..." autocomplete="off">
-                <button id="chatbot-send" aria-label="Send message">
+                <button id="chatbot-send" aria-label="Send message" type="button">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>

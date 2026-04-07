@@ -184,20 +184,20 @@
 
             <div id="msg-box"></div>
 
-            <form id="signup-form">
+            <form id="signup-form" autocomplete="on" action="javascript:void(0)">
                 <div class="form-group">
                     <label for="name">Full Name</label>
-                    <input type="text" id="name" required placeholder="EX: Rahul Patel">
+                    <input type="text" id="name" name="name" autocomplete="name" required placeholder="EX: Rahul Patel">
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" required placeholder="name@example.com">
+                    <input type="email" id="email" name="email" autocomplete="email" required placeholder="name@example.com">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" required placeholder="••••••••" minlength="6">
+                    <input type="password" id="password" name="password" autocomplete="new-password" required placeholder="••••••••" minlength="6">
                 </div>
-                <button type="submit" class="btn-auth">Sign Up</button>
+                <button type="button" class="btn-auth" id="signup-btn">Sign Up</button>
             </form>
 
             <div class="auth-footer">
@@ -208,12 +208,19 @@
 
     <script src="auth.js"></script>
     <script>
-        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+        const signupForm = document.getElementById('signup-form');
+        const signupBtn = document.getElementById('signup-btn');
+
+        signupBtn.addEventListener('click', () => {
+            signupForm.requestSubmit();
+        });
+
+        signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const btn = document.querySelector('.btn-auth');
+            const btn = document.getElementById('signup-btn');
             const msgBox = document.getElementById('msg-box');
 
             btn.disabled = true;

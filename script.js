@@ -298,11 +298,12 @@ function renderEvents() {
             <h3>${event.title}</h3>
             <p class="event-meta">${event.date} · ${event.location}</p>
             <p>${event.description}</p>
-            <button data-event="${event.id}">Register</button>
+            <button type="button" data-event="${event.id}" data-requires-auth="true">Register</button>
         `;
 
         const btn = card.querySelector('button');
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
             window.location.href = `register.html?event=${event.id}`;
         });
 
@@ -313,6 +314,8 @@ function renderEvents() {
 function setupEligibilityChecker() {
     const form = document.getElementById('eligibility-form');
     const result = document.getElementById('eligibility-result');
+
+    if (!form || !result) return;
 
     const rules = {
         'B.Tech': { minPercentage: 60, minExam: 60, text: '10+2 with Physics & Math, and minimum entrance score 60' },
@@ -465,7 +468,8 @@ const chatbotInput = document.getElementById('chatbot-input');
 const chatbotSend = document.getElementById('chatbot-send');
 
 // Toggle chatbot window
-chatbotToggle.addEventListener('click', () => {
+chatbotToggle.addEventListener('click', (e) => {
+    e.preventDefault();
     chatbotWindow.classList.remove('hidden');
     chatbotToggle.classList.add('hidden');
     chatbotBadge.style.display = 'none';
@@ -475,7 +479,8 @@ chatbotToggle.addEventListener('click', () => {
     }
 });
 
-chatbotClose.addEventListener('click', () => {
+chatbotClose.addEventListener('click', (e) => {
+    e.preventDefault();
     chatbotWindow.classList.add('hidden');
     chatbotToggle.classList.remove('hidden');
     document.body.style.overflow = 'auto';
@@ -500,8 +505,12 @@ function showMessage(key) {
     data.options.forEach(option => {
         const btn = document.createElement('button');
         btn.className = 'chatbot-option-btn';
+        btn.type = 'button';
         btn.textContent = option.label;
-        btn.addEventListener('click', () => handleOptionClick(option));
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleOptionClick(option);
+        });
         chatbotOptions.appendChild(btn);
     });
 }
@@ -612,7 +621,10 @@ async function askGemini(question) {
 
 // Event listeners for chat input
 if (chatbotSend) {
-    chatbotSend.addEventListener('click', handleUserMessage);
+    chatbotSend.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleUserMessage();
+    });
 }
 
 if (chatbotInput) {

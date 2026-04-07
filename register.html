@@ -8,6 +8,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="simple_style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .event-reg-section {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .register-form-wrap {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .register-field {
+            margin-bottom: 20px;
+        }
+
+        .register-field-last {
+            margin-bottom: 30px;
+        }
+
+        .register-submit {
+            width: 100%;
+        }
+
+        .register-result {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -29,14 +59,14 @@
     </nav>
 
     <!-- Registration Section -->
-    <section class="events-section" style="min-height: 70vh; display: flex; align-items: center;">
+    <section class="events-section event-reg-section">
         <div class="container">
             <h2 class="section-heading">Event Registration</h2>
             <p class="section-subtitle">Fill out the form below to secure your spot for upcoming events.</p>
             
-            <div class="eligibility-form" style="max-width: 600px; margin: 0 auto;">
+            <div class="eligibility-form register-form-wrap">
                 <form id="register-form">
-                    <div class="field-group" style="margin-bottom: 20px;">
+                    <div class="field-group register-field">
                         <label for="event-select">Select Event</label>
                         <select id="event-select" required>
                             <option value="">-- Choose an Event --</option>
@@ -44,24 +74,24 @@
                         </select>
                     </div>
                     
-                    <div class="field-group" style="margin-bottom: 20px;">
+                    <div class="field-group register-field">
                         <label for="fullname">Full Name</label>
                         <input type="text" id="fullname" placeholder="Enter your full name" required>
                     </div>
                     
-                    <div class="field-group" style="margin-bottom: 20px;">
+                    <div class="field-group register-field">
                         <label for="branch">Branch / Department</label>
                         <input type="text" id="branch" placeholder="e.g. Computer Science, Mechanical" required>
                     </div>
                     
-                    <div class="field-group" style="margin-bottom: 30px;">
+                    <div class="field-group register-field register-field-last">
                         <label for="contact">Contact Number</label>
                         <input type="tel" id="contact" placeholder="Enter your contact number" required pattern="[0-9]{10}" title="Please enter a valid 10-digit number">
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Register Now</button>
+                    <button type="submit" class="btn btn-primary register-submit">Register Now</button>
                     
-                    <div id="register-result" class="eligibility-result" aria-live="polite" style="display: none; margin-top: 20px; text-align: center;"></div>
+                    <div id="register-result" class="eligibility-result register-result" aria-live="polite"></div>
                 </form>
             </div>
         </div>
